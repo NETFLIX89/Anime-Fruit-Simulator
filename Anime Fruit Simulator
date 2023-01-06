@@ -1,1 +1,448 @@
-Rewrite
+getgenv().SecureMode = true
+local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/UI-Interface/CustomFIeld/main/RayField.lua'))()
+
+
+local Window = Rayfield:CreateWindow({
+	Name = "Anime Fruit Simulator by Lol123#0030",
+	LoadingTitle = "Anime Fruit Simulator",
+	LoadingSubtitle = "Lol123#0030",
+	ConfigurationSaving = {
+		Enabled = true,
+		FolderName = Farming, -- Create a custom folder for your hub/game
+		FileName = ""
+	},
+        Discord = {
+        	Enabled = false,
+        	Invite = "", -- The Discord invite code, do not include discord.gg/
+        	RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+        },
+	
+})
+local Tab = Window:CreateTab("Main", 4483362458)
+local Section = Tab:CreateSection("Auto Kill")
+local Input = Tab:CreateInput({
+    Name = " Input Enemy Level",
+    Info = "Input Enemy Level To Auto Farm", 
+    PlaceholderText = "Enemy Level",
+    NumbersOnly = true, 
+    CharacterLimit = 150, --max character limit. Remove if none.
+    OnEnter = true, 
+    RemoveTextAfterFocusLost = false,
+    Callback = function(Text)
+        getgenv().selEnemy = Text;
+    end,
+ })
+
+
+ local Toggle = Tab:CreateToggle({
+    Name = "Auto Farm Selected Enemy",
+    CurrentValue = false,
+    Flag = "AutoFarm", 
+    Callback = function(Value)
+        getgenv().AutoFarm = Value;
+    end,
+ })
+
+task.spawn(function()
+    while wait() do 
+        if getgenv().AutoFarm and getgenv().selEnemy ~= nil then
+            for i,v in ipairs(game:GetService("Workspace").EnemySpawnPoints:GetDescendants()) do
+                if v:IsA("TextLabel") then
+                    pcall(function()
+                        if v.Text == "LVL.".. getgenv().selEnemy then
+                            if v.Parent.Parent.Parent.Humanoid.Health > 0 then
+                                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Parent.Parent.Parent.Parent.CFrame * CFrame.new(0,0,2)
+                            end
+                        end
+                    end)
+                end
+            end
+        end
+    end
+end)
+
+local Toggle = Tab:CreateToggle({
+    Name = "Auto Kill Near",
+    CurrentValue = false,
+    Flag = "Auto Click", 
+    Callback = function(Value)
+        getgenv().autoTap = Value
+        if Value then
+            doTap()
+        end
+    end
+})
+
+function doTap()
+    while getgenv().autoTap == true do
+        local attack_remote = game:GetService("ReplicatedStorage").Remotes.Attack
+        attack_remote:FireServer()
+        attack_remote:FireServer()
+        attack_remote:FireServer()
+        attack_remote:FireServer()
+        attack_remote:FireServer()
+        attack_remote:FireServer()
+        attack_remote:FireServer()
+        wait()
+    end 
+end
+
+local Section = Tab:CreateSection("Auto Moves")
+local Toggle = Tab:CreateToggle({
+    Name = "Auto Move 1",
+    CurrentValue = false,
+    Flag = "Auto Move", 
+    Callback = function(Value)
+        getgenv().autoMove = Value
+        if Value then
+            autoMove()
+        end
+    end
+})
+
+function autoMove()
+    while getgenv().autoMove == true do
+        local args = {
+            [1] = "One"
+        }
+        
+        game:GetService("ReplicatedStorage").Remotes.Validate:FireServer(unpack(args))
+        wait()
+    end 
+end
+
+local Toggle = Tab:CreateToggle({
+    Name = "Auto Move 2",
+    CurrentValue = false,
+    Flag = "Auto Move2", 
+    Callback = function(Value)
+        getgenv().autoMove2 = Value
+        if Value then
+            autoMove2()
+        end
+    end
+})
+
+function autoMove2()
+    while getgenv().autoMove2 == true do
+        local args = {
+            [1] = "Two"
+        }
+        
+        game:GetService("ReplicatedStorage").Remotes.Validate:FireServer(unpack(args))
+        wait()
+    end 
+end
+
+local Toggle = Tab:CreateToggle({
+    Name = "Auto Move 3",
+    CurrentValue = false,
+    Flag = "Auto Move3", 
+    Callback = function(Value)
+        getgenv().autoMove3 = Value
+        if Value then
+            autoMove3()
+        end
+    end
+})
+
+function autoMove3()
+    while getgenv().autoMove3 == true do
+        local args = {
+            [1] = "Three"
+        }
+        
+        game:GetService("ReplicatedStorage").Remotes.Validate:FireServer(unpack(args))
+        wait()
+    end 
+end
+
+local Tab = Window:CreateTab("Fruits", 4483362458)
+local Section = Tab:CreateSection("Fruit Stuff")
+local Toggle = Tab:CreateToggle({
+    Name = "Auto Pickup Fruits",
+    CurrentValue = false,
+    Flag = "Auto Fruit", 
+    Callback = function(Value)
+        getgenv().autoFruit = Value
+    end
+})
+
+task.spawn(function()
+    while wait() do
+        if getgenv().autoFruit == true  then
+            for i,v in pairs(game:GetService("Workspace").FruitSpawns:GetDescendants()) do
+                if v.Name == "ProximityPrompt" then
+                local Fruit = v;
+                    if v.Parent.Name ~= "Bari" then
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Parent:FindFirstChildOfClass("MeshPart").CFrame
+                    fireproximityprompt(v)
+                    task.wait()
+                    end
+                end
+                end
+            end
+    end
+end)
+
+local Dropdown = Tab:CreateDropdown({
+    Name = "Select Fruit Level",
+    Options = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10",},
+    CurrentOption = " ",
+    Flag = "Fuse", 
+    Callback = function(Option)
+        getgenv().SelectedFruit = Option; 
+    end,
+})
+
+local Toggle = Tab:CreateToggle({
+	Name = "Auto Fuse",
+	CurrentValue = false,
+	Flag = "Fuse", 
+	Callback = function(Value)
+		getgenv().autoFuse = Value
+end
+})
+
+    spawn(function()
+        while getgenv().autoFuse == true do
+            local args = {
+                [1] = {},
+                [2] = SelectedFruit
+            }
+            
+            game:GetService("ReplicatedStorage").Remotes.Fuse:FireServer(unpack(args))         
+            wait()
+        end 
+    end)
+
+local Tab = Window:CreateTab("Eggs", 4483362458)
+local Section = Tab:CreateSection("Egg")
+
+local eggtable = {}
+
+local eggs = game:GetService("Workspace").Maps.Eggs:GetChildren()
+table.sort(eggs, function(a, b) return a.Name < b.Name end)
+
+for _,v in ipairs(eggs) do
+  if not eggtable[v.Name] then
+    table.insert(eggtable,v.Name)
+    eggtable[v.Name] = true
+  end
+end
+
+local eggtoopen = "iagree"
+Tab:CreateDropdown({
+    Name = "Egg to Open",
+    Options = eggtable,
+    CurrentOption = "",
+    Flag = "Egg to open",
+    Callback = function(Option)
+        eggtoopen = Option
+    end,
+})
+
+local Toggle = Tab:CreateToggle({
+	Name = "Auto Open Egg x1",
+	CurrentValue = false,
+	Flag = "Auto Egg", 
+	Callback = function(Value)
+        getgenv().buyegg = Value
+        if Value then
+            buyegg(eggtoopen)
+        end
+	end
+})
+
+function buyegg(v)
+    spawn(function()
+        while wait() and getgenv().buyegg do 
+            local args = {
+                [1] = v,
+                [2] = "HatchBtn"
+            }
+            
+            game:GetService("ReplicatedStorage").Remotes.Egg:FireServer(unpack(args))    
+            wait()    
+        end
+    end)
+end
+
+
+local Toggle = Tab:CreateToggle({
+	Name = "Auto Open Egg x3",
+	CurrentValue = false,
+	Flag = "Auto Egg", 
+	Callback = function(Value)
+        getgenv().buyegg2 = Value
+        if Value then
+            buyegg2(eggtoopen)
+        end
+	end
+})
+
+function buyegg2(v)
+    spawn(function()
+        while wait() and getgenv().buyegg2 do 
+            local args = {
+                [1] = v,
+                [2] = "TrippleBtn"
+            }
+            
+            game:GetService("ReplicatedStorage").Remotes.Egg:FireServer(unpack(args))    
+            wait()    
+        end
+    end)
+end
+
+
+local Tab = Window:CreateTab("Local Player", 4483362458)
+local Section = Tab:CreateSection("Local Player")
+local Toggle = Tab:CreateToggle({
+    Name = "Toggle WalkSpeed",
+    CurrentValue = false,
+    Flag = "Toggle1", 
+    Callback = function(Value)
+        getgenv().ChangeWalkSpeed = Value
+    end,
+})
+
+local Slider = Tab:CreateSlider({
+    Name = "Change WalkSpeed",
+    Range = {50, 500},
+    Increment = 10,
+    Suffix = "Speed",
+    CurrentValue = 10,
+    Flag = "Slider1", 
+    Callback = function(Value)
+        getgenv().walkSpeed = Value
+    end,
+})
+
+task.spawn(function()
+    while wait() do 
+        if getgenv().walkSpeed ~= nil and getgenv().ChangeWalkSpeed then
+            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = getgenv().walkSpeed
+        end
+    end
+end)
+
+local Toggle = Tab:CreateToggle({
+    Name = "Toggle JumpPower",
+    CurrentValue = false,
+    Flag = "Toggle2", 
+    Callback = function(Value)
+        getgenv().ChangeJumpPower = Value
+    end,
+})
+
+local Slider = Tab:CreateSlider({
+    Name = "Change JumpPower",
+    Range = {50, 500},
+    Increment = 10,
+    Suffix = "Jump Power",
+    CurrentValue = 10,
+    Flag = "Slider2", 
+    Callback = function(Value)
+        getgenv().jumpPower = Value
+    end,
+})
+
+task.spawn(function()
+    while wait() do 
+        if getgenv().jumpPower ~= nil and getgenv().ChangeJumpPower then
+            game.Players.LocalPlayer.Character.Humanoid.JumpPower = getgenv().jumpPower
+        end
+    end
+end)
+
+local Tab = Window:CreateTab("Misc", 4483362458)
+local Section = Tab:CreateSection("Misc")
+local Toggle = Tab:CreateToggle({
+    Name = "Toggle Server Hop",
+    CurrentValue = false,
+    Flag = "Toggle3", 
+    Callback = function(Value)
+        getgenv().ServerHop = Value
+    end,
+})
+
+local Slider = Tab:CreateSlider({
+    Name = "Server Hop Interval",
+    Range = {10, 600},
+    Increment = 10,
+    Suffix = "Seconds",
+    CurrentValue = 60,
+    Flag = "Slider3", 
+    Callback = function(Value)
+        getgenv().ServerHopInterval = Value
+    end,
+})
+
+task.spawn(function()
+    while wait() do 
+        if getgenv().ServerHop then
+            local Http = game:GetService("HttpService")
+            local TPS = game:GetService("TeleportService")
+            local Api = "https://games.roblox.com/v1/games/"
+            
+            local _place = game.PlaceId
+            local _servers = Api.._place.."/servers/Public?sortOrder=Asc&limit=100"
+            function ListServers(cursor)
+               local Raw = game:HttpGet(_servers .. ((cursor and "&cursor="..cursor) or ""))
+               return Http:JSONDecode(Raw)
+            end
+            
+            local Server, Next; repeat
+               local Servers = ListServers(Next)
+               Server = Servers.data[1]
+               Next = Servers.nextPageCursor
+            until Server
+            
+            TPS:TeleportToPlaceInstance(_place,Server.id,game.Players.LocalPlayer)
+        end
+    end
+end)
+
+
+
+
+local Toggle = Tab:CreateToggle({
+	Name = "Auto Claim Rewards",
+	CurrentValue = false,
+	Flag = "Auto Reward", 
+	Callback = function(Value)
+        getgenv().autoReward = Value
+        if Value then
+            autoReward()
+        end
+	end
+})
+
+function autoReward()
+    for i = 1, 12 do
+        local args = {
+            [1] = tostring(i)
+        }
+        
+        game:GetService("ReplicatedStorage").Remotes.Reward:FireServer(unpack(args))
+        wait()
+    end
+end
+
+
+
+local Button = Tab:CreateButton({
+    Name = "Redeem All Codes",
+    Callback = function()
+        local codeNames = {"FREETORI:O", "ObtainDiscord", "triffyWscripter", "TWITTERgang!", "200Likes:O", "500Likes!!!"}
+        for i, codeName in pairs(codeNames) do
+            local args = {
+                [1] = codeName
+            }
+            game:GetService("ReplicatedStorage").Remotes.Code:FireServer(unpack(args))
+            wait()
+        end
+    end
+})
+
